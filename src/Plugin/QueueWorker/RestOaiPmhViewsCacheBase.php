@@ -58,6 +58,7 @@ abstract class RestOaiPmhViewsCacheBase extends QueueWorkerBase implements Conta
       // use this to page through all results
       $limit =  $view->getItemsPerPage();
       $total = $view->total_rows;
+      \Drupal::logger('rest_oai_pmh')->debug(t('Total rows=@rows', ['@rows' => $total]));
       // if some results were returned, save them to our rest_oai_pmh_* tables
       if ($total > 0) {
         // init the variables used for the UPSERT database call to add/update this SET
@@ -89,6 +90,7 @@ abstract class RestOaiPmhViewsCacheBase extends QueueWorkerBase implements Conta
         if ($limit > 0) {
           $this->offset = $limit;
           while ($limit < $total) {
+            \Drupal::logger('rest_oai_pmh')->debug(t('Indexing with offset=@offset', ['@offset' => $this->offset]));
             $this->indexViewRecords();
             $this->offset += $limit;
             $total -= $limit;
